@@ -1,0 +1,40 @@
+#Tipos de nodos: una de ordenamiento, Orderer. EN SANS es para que muerda correr por la red, aqui como todo esta en el mismo servidor, pues localhost
+#Los Nodos tipo PeerOrgs el Count es el numero de nodos por defecto, User Count 1 re crea un usuario y el root creo
+# Despues de crear este archivo de diseño, hay que crear el matgerial criptografico:
+#
+OrdererOrgs:
+    - Name: Orderer
+      Domain: acme.com
+      EnableNodeOUs: true
+      Specs: 
+        - Hostname: orderer
+          SANS:
+            - localhost
+PeerOrgs:
+    - Name: Org1
+      Domain: org1.acme.com
+      EnableNodeOUs: true
+      Template:
+        Count: 1
+        SANS: 
+          - localhost
+        Users:
+          Count: 1  
+    - Name: Org2
+      Domain: org2.acme.com
+      EnableNodeOUs: true
+      Template:
+        Count: 1
+        SANS: 
+          - localhost
+        Users:
+          Count: 1
+    - Name: Org3
+      Domain: org3.acme.com
+      EnableNodeOUs: true
+      Template:
+        Count: 1
+        SANS: 
+          - localhost
+        Users:
+          Count: 1         
