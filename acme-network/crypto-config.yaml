@@ -69,10 +69,14 @@
 #                Capabilities:
 #                    <<: *ApplicationCapabilities
 #    
-#
-# una vez configurado todo, lanzamos el comando: sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ configtxgen -profile ThreeOrgsOrdererGenesis -channelID system-channel -outputBlock ./channel-artifacts/genesis.block
-#
-#
+#vamos al configtx.yaml y vemos el profile, ahora crearemos sus definiciones la del ThreeOrgsChannel y la del ThreeOrgsOrdererGenesis
+#6.- una vez configurado todo, lanzamos el comando: sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ configtxgen -profile ThreeOrgsOrdererGenesis -channelID system-channel -outputBlock ./channel-artifacts/genesis.block
+#7.- ahora creamos la transaccion del canal: configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID marketplace  ((el nombre del canal "marketplace" me lo invento, el que quiera))
+#8.- hay que generar ahora los 3 PanchorsPeers: 
+#configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID marketplace -asOrg Org1MSP
+#configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID marketplace -asOrg Org2MSP
+#configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org3MSPanchors.tx -channelID marketplace -asOrg Org3MSP
+
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
