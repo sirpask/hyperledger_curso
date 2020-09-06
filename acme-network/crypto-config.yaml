@@ -8,43 +8,44 @@
 #org1.acme.com
 #org2.acme.com
 #org3.acme.com
-# 3 Se ha creado una carpeta cryto-config con toda la mandanga
+# 3 Se ha creado una carpeta cryto-config con toda la mandanga y se sube a github
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git add crypto-config
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git commit -m "agrego crypto-config.yaml"
-# pues siugamos asd
+#git push -u origin master
+#4 
 OrdererOrgs:
-    - Name: Orderer
-      Domain: acme.com
-      EnableNodeOUs: true
-      Specs: 
-        - Hostname: orderer
-          SANS:
-            - localhost
+  - Name: Orderer
+    Domain: acme.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - localhost
 PeerOrgs:
-    - Name: Org1
-      Domain: org1.acme.com
-      EnableNodeOUs: true
-      Template:
-        Count: 1
-        SANS: 
-          - localhost
-        Users:
-          Count: 1  
-    - Name: Org2
-      Domain: org2.acme.com
-      EnableNodeOUs: true
-      Template:
-        Count: 1
-        SANS: 
-          - localhost
-        Users:
-          Count: 1
-    - Name: Org3
-      Domain: org3.acme.com
-      EnableNodeOUs: true
-      Template:
-        Count: 1
-        SANS: 
-          - localhost
-        Users:
-          Count: 1         
+  - Name: Org1
+    Domain: org1.acme.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
+  - Name: Org2
+    Domain: org2.acme.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: org3.acme.com
+    EnableNodeOUs: true    
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
