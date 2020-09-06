@@ -12,7 +12,67 @@
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git add crypto-config
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git commit -m "agrego crypto-config.yaml"
 #git push -u origin master
-#4 
+#4 comprobar certificados para 10 años de admin por ejemplo en https://www.dondominio.com/products/ssl/tools/ssl-checker/
+# 5 añadimos "configtx.yaml" de https://github.com/blockchainempresarial/curso-hyperledger-fabric/blob/master/acme-network/configtx.yaml
+# archivo super importante con secciones para configurar:
+# *- seccion de organizaciones:
+# A- como correra de inicio la organizacion por la red, proveedor de servicios de membresia MSP, directorio de donde se creo. 
+#     para que funcione todo esto tiene que estar generado lo de cryptogen.
+#     Le damos a admin todos los permisos
+#     EL endpoint es el servicio que vamos a levantar y su puerto
+#
+# B- configuracin de cada organizacion:
+#     se definen permisos
+# C- el anchorPeers es el peer de contacto con el resto de organizaciones, 1 por organizacion.    
+# *-seccion de Capabilities:
+#  capas de una red de fabric, se define la version de hyperledger fabric para cada una de las capas, canal, ordenacion y aplicacion
+# *-Seccion de Aplicaciones:
+# definimos permisos por dedecto para las apps
+#*- seccion de ordenamiento:
+#   3 tipos: "solo" para test.
+#            "kafka (apache)" antes de la vertsion 2 para produccion
+#             "etcdraft" para produccion
+#
+#el configuracion solo usa:
+#        BatchTimeout: 2s
+#        BatchSize:
+#            MaxMessageCount: 10
+#            AbsoluteMaxBytes: 99 MB
+#            PreferredMaxBytes: 512 KB
+#*- seccion de canales
+#      Politicas. (permisos)      
+#- seccion de profile (perfiles)
+#      Politicas. (permisos)
+#-       ThreeOrgsOrdererGenesis:   <<< el nombre que quieras, que vas a hacer desde el principio y el bloque genses es una configuracion
+#            <<: *ChannelDefaults  >>coge las configuraciones anteriores
+#           Orderer:
+#                <<: *OrdererDefaults
+#                Organizations:
+#                    - *OrdererOrg
+#                Capabilities:
+#                    <<: *OrdererCapabilities
+#            Consortiums:
+#                SampleConsortium:
+#                    Organizations:
+#                        - *Org1
+#                        - *Org2
+#                        - *Org3
+#        ThreeOrgsChannel:
+#            Consortium: SampleConsortium
+#            <<: *ChannelDefaults
+#            Application:
+#                <<: *ApplicationDefaults
+#                Organizations:
+#                    - *Org1
+#                    - *Org2
+#                    - *Org3
+#                Capabilities:
+#                    <<: *ApplicationCapabilities
+#    
+#
+# una vez configurado todo, lanzamos el comando: sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ configtxgen -profile ThreeOrgsOrdererGenesis -channelID system-channel -outputBlock ./channel-artifacts/genesis.block
+#
+#
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
