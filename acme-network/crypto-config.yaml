@@ -1,6 +1,16 @@
-#Tipos de nodos: una de ordenamiento, Orderer. EN SANS es para que muerda correr por la red, aqui como todo esta en el mismo servidor, pues localhost
+#1Tipos de nodos: una de ordenamiento, Orderer. EN SANS es para que muerda correr por la red, aqui como todo esta en el mismo servidor, pues localhost
 #Los Nodos tipo PeerOrgs el Count es el numero de nodos por defecto, User Count 1 re crea un usuario y el root creo
 # Despues de crear este archivo de diseño, hay que crear el matgerial criptografico:
+#2 sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ cryptogen generate --config=./crypto-config.yam
+# EL cryptogen se descarga dentro de hyperledger, concretamente en sirpask@ali12:~/hyperledger/fabric/fabric-samples/bin$ cd
+#en los archivos que te descargasgas de hyperledger.
+# sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ cryptogen generate --config=./crypto-config.yaml
+#org1.acme.com
+#org2.acme.com
+#org3.acme.com
+# 3 Se ha creado una carpeta cryto-config con toda la mandanga
+#sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git add crypto-config
+#sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git commit -m "agrego crypto-config.yaml"
 #
 OrdererOrgs:
     - Name: Orderer

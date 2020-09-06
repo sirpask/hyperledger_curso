@@ -60,23 +60,7 @@ c46b5fa4d940: Pull complete
 Digest: sha256:29934af957c53004d7fb6340139880d23fb1952505a15d69a03af0d1418878cb
 
 Status: Downloaded newer image for ubuntu:latest
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
+
 	
 MacBook-Pro-de-Raul:~ raulunzue$ docker pull ubuntu
  
