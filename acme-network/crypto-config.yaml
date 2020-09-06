@@ -11,7 +11,7 @@
 # 3 Se ha creado una carpeta cryto-config con toda la mandanga
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git add crypto-config
 #sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ git commit -m "agrego crypto-config.yaml"
-#
+# pues siugamos asd
 OrdererOrgs:
     - Name: Orderer
       Domain: acme.com
