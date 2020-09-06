@@ -76,7 +76,9 @@
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID marketplace -asOrg Org1MSP
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID marketplace -asOrg Org2MSP
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org3MSPanchors.tx -channelID marketplace -asOrg Org3MSP
-
+#
+# Hasta aqui es el diseño de la red, a partir de aqui entra lo dinamico y uso de dockers:
+#
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
