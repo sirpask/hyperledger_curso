@@ -79,6 +79,14 @@
 #
 # Hasta aqui es el diseño de la red, a partir de aqui entra lo dinamico y uso de dockers:
 #
+#Creamos ahora una clase padre, abstracta desde la que clases hijas puedan estender y crear sus objetos, creando una carpeta Base y metiendo el peer-base-yaml
+#servicio peer-base va a despleagar una image con docker compose> la imagen esta en docker hub para levantar el peer
+#
+#
+#
+#
+#
+#
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
