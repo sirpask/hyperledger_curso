@@ -79,13 +79,23 @@
 #
 # Hasta aqui es el diseño de la red, a partir de aqui entra lo dinamico y uso de dockers:
 #
-#Creamos ahora una clase padre, abstracta desde la que clases hijas puedan estender y crear sus objetos, creando una carpeta Base y metiendo el peer-base-yaml
-#servicio peer-base va a despleagar una image con docker compose> la imagen esta en docker hub para levantar el peer
+#9.-Creamos ahora una clase padre, abstracta desde la que clases hijas puedan estender y crear sus objetos, creando una carpeta Base y metiendo el peer-base-yaml
+#servicio peer-base.yaml va a despleagar una image con docker compose> la imagen esta en docker hub para levantar el peer, trata un servicio general.
+#*********************************************
+# inciso, actores necesarios para montar una red Hyperledger ***Arquitectos, desarrolladores<<< y de mantenimiento> monitoreo (operador)
+#**En configtx.yaml > SECTION: Orderer > solo > es solo para pruebas, no es confiable. kafka aun se sigue usando en producion pero solo para redes permisionaras con entornos confiables, hay intencion de trabajar en conjunto entre todas las entidades, tiene tolerancia a crashing (soporta petes). 50+1 K.O. Hay una organizacion fundadora, y la otras tienen rol mas libianos.
+#** Con transaccines complicadas, y nodos no confiables > Rav mejor, concepto mas descentralizado. Cada organizacion tienen su propio RAV.
+#*********************************************
+#10-base/docker-compose-base.yaml >> no sirve para levantar la red, sirve para definir algunos componentes, algunos servicios de forma individual, como los peer de ordenacion, y los peer normales. ejemplo> peer0.org1.acme.com > este servicio crea/define el peer 1, el PEER_ID: es el nombre bueno. ojo, esto no funcionaria por que los nombres de los peers no aceptan puntos ejemplo: linea 39 del fichero. (el 7050 es el puerto dentro del contenerdor, se podria redireccionar fuera)
+# CORE_PEER_LOCALMSPID=  <<<Org1MSP>> este es el identificador unico del peer en la red y este fichero monta todos los ficheros que henmos creado al principio
+#11.- Para este ejemplo hay que montar una red de docker. Para poder montar 3 contgenedores que se comuniquen entre ellos.
+#Hay que configurar la red desde el docker compose, se define toda la red desde ahi. Si hubiera que cambiar las redes o puertos por que ya estan en uso, si que habria que tocar la red desde el docker puro y duro, sin la ayuda del compose.
+# cada contenedor va a tener un IP, (como si fueran maquinas independientes) en principio todos los contenerdores van a tener el mismo puerto 7051, pero desde la configuracion de docker se les homologa en rangos de 1000 para que no interfieran entre ellos, y luego se parchea por fuera con el puerto que tengamos, para que no interfiera en los puertos de nuestra maquina.
+#Si hay varias organizaciones con maquinas separadas, cada organizacion tiene que montar un docker compose para levantar los peers
+#Cada organizacion tendria su material criptografico oculto del resto de organizaciones, en este ejemplo al estar montado todo en una maquina esta todo en la misma carpeta.
+#Una cadena blockchain a parte de peers, neceista tambien nodos de ordenacion (y se configura este servicio de ordenamiento tambien en el docker-compose-base.yaml), y hay que configurarlo
 #
-#
-#
-#
-#
+#Video 4 > 12.- docker-compose-cli-couchdb.yaml >> para crear la red compose. Pones el orden para levantar los servicios en la red: orderer.acme.com:> peer0.org1.acme.com: > peer0.org2.acme.com: > peer0.org3.acme.com: > certificados > couchdb: (base de datos nosql de Apache), cada peer un couchdb 
 #
 OrdererOrgs:
   - Name: Orderer

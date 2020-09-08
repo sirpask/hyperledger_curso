@@ -2,7 +2,7 @@
 # Autor: Ricardo Ruano, ricardo@blockchainempresarial.com
 # Date: 20-08-2020
 # SPDX-License-Identifier: Apache-2.0
-#
+# COnfiguracion del peer
 
 version: '2'
 
