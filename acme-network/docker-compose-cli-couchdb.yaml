@@ -80,8 +80,8 @@ services:
     networks:
       # ---CHANGED--- our network is called "basic"
       - basic
-
-  #CA for Org1	
+  
+  # --- CA for Org1	vas a docker hub y ves que imagen es la ultima
   ca.org1.acme.com:
     image: hyperledger/fabric-ca:1.4.8
     environment:
@@ -101,6 +101,7 @@ services:
     networks:
       - basic
 
+  # --- contenedor de herramientas, puedo ejecutar comandos en nombre del primer peer (chaincode = contratos inteligentes)
   cli:
     container_name: cli
     image: hyperledger/fabric-tools:2.2
