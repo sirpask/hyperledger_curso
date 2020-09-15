@@ -112,6 +112,66 @@
 # dentro de channel-artifacts > acme-network/channel-artifacts/channel.tx, acme-network/channel-artifacts/genesis.block, acme-network/channel-artifacts/Org1MSPanchors.tx, acme-network/channel-artifacts/Org2MSPanchors.tx,acme-network/channel-artifacts/Org3MSPanchors.tx
 # dentro de cryto-config > dos carpetas: acme-network/crypto-config/ordererOrganizations, acme-network/crypto-config/peerOrganizations
 # y luego dentro del directorio principal 3 ficheros de configuracion: acme-network/configtx.yaml, acme-network/crypto-config.yaml, acme-network/docker-compose-cli-couchdb.yaml
+#11 .- Despliegue.
+# Usar portainer.Herramienta, crearemos un volumen de docker: docker volume create portainer_data y luego ejecutamos portainer:
+# docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer  (esto lo descarga el solo y lo descarga)
+# Rapidamente (tenemos unos 3 minutos) vamos al  browser y ponermos localhost:9000 > y sale el servidor arrancado. (creamos un usuario admin y elegimos local > conectar)
+#12 creamos unas variables para ayudar a levatar el servicio
+# las variables son: export CHANNEL_NAME=marketplace
+#                    export VERBOSE=false
+#                    export FABRIC_CFG_PATH=$PWD
+# Ahora arrancaremos docker-compose-cli-couchdb.yaml con el comando: CHANNEL_NAME=$CHANNEL_NAME docker-compose -f docker-compose-cli-couchdb.yaml up -d  (- f es de fichero, -d es que lo ejecute y podamos seguir usando la pantalla, que no se quede ahi como pasa con el mongo, que se quede en segundo plano).
+#Creating network "acme-network_basic" with the default driver
+#Pulling couchdb0 (couchdb:3.1)...
+#3.1: Pulling from library/couchdb
+#d121f8d1c412: Pull complete
+#36f0ba3ab6ff: Pull complete
+#4ad755530f10: Pull complete
+#85b93b47d5de: Pull complete
+#914762042288: Pull complete
+#a19d0d042d73: Pull complete
+#e5072937c22e: Pull complete
+#3a2c37f3e964: Pull complete
+#cec4e3b21e82: Pull complete
+#06823e20f7d4: Pull complete
+#87dc384bcdb0: Pull complete
+#Digest: sha256:b604d056d8024f10346eab768de7aea06bc0a1b7c55d6087e1b1cd4328c8061c
+#Status: Downloaded newer image for couchdb:3.1
+#Creating orderer.acme.com ... done
+#Creating peer0.org1.acme.com ... done
+#Creating couchdb2         ... done
+#Creating couchdb0         ... done
+#Creating peer0.org3.acme.com ... done
+#Creating peer0.org1.acme.com ... done
+#Creating peer0.org2.acme.com ... done
+#Creating cli                 ... done 
+#--> esta mal, faltaria el ordereer.acme.com// el couchdb1 y el ca.org1.acme.com  y el peer0.org1.acme.com esta duplicado.
+# Y para ver que todo a arrancado bien: docker ps y vemos que aunque en el otro lado pone que flatan cosas, aqui está bien levantado.
+#
+#pepitoperez:~/Escritorio/hyperledger_curso$ docker ps
+#CONTAINER ID        IMAGE                              COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+#bb00895b8077        hyperledger/fabric-tools:2.2       "/bin/bash"              4 minutes ago       Up 4 minutes                                                         cli
+#22a2255af16c        hyperledger/fabric-peer:2.2.0      "peer node start"        4 minutes ago       Up 4 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp   peer0.org2.acme.com
+#b11a76e293f1        hyperledger/fabric-peer:2.2.0      "peer node start"        4 minutes ago       Up 4 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.acme.com
+#4884dd4ac3a8        hyperledger/fabric-peer:2.2.0      "peer node start"        4 minutes ago       Up 4 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp   peer0.org3.acme.com
+#02d88feadfd7        hyperledger/fabric-ca:1.4.8        "sh -c 'fabric-ca-se…"   4 minutes ago       Up 4 minutes        0.0.0.0:7054->7054/tcp                           ca.org1.acme.com
+#0b53dec2d404        couchdb:3.1                        "tini -- /docker-ent…"   4 minutes ago       Up 4 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb0
+#2e6816f9be48        couchdb:3.1                        "tini -- /docker-ent…"   4 minutes ago       Up 4 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5986->5984/tcp       couchdb2
+#62fe3a2f3d39        couchdb:3.1                        "tini -- /docker-ent…"   4 minutes ago       Up 4 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5985->5984/tcp       couchdb1
+#58dea0a5300d        hyperledger/fabric-orderer:2.2.0   "orderer"                4 minutes ago       Up 4 minutes        0.0.0.0:7050->7050/tcp                           orderer.acme.com
+#67e4e28e9dec        portainer/portainer                "/portainer"             22 minutes ago      Up 22 minutes       0.0.0.0:8000->8000/tcp, 0.0.0.0:9000->9000/tcp   lucid_shaw
+#
+#13.- LUego vamos a localhost:9000 > containers > y entramos en la consola del contenedor cli.
+# Vemos donde estamos:
+#bash-5.0# pwd
+#/opt/gopath/src/github.com/hyperledger/fabric/peer
+#bash-5.0# 
+# _> ahora falta crear un canal. Creamos anteriormente una transaccion y una configuracion de como queremos ese canal, pero usamos la consola de cli para arrancar el canar con la configuracion anteriormente creada en
+# la carpeta chanel-artifacts
+# volvemos a poner el nombre del canar en una variable global: export CHANNEL_NAME=marketplace  (esto igual no habria que volverlo hacer, pero no cuesta nada)
+#ahora lanzamos el comando: peer channel create -o orderer.acme.com:7050 -c SCHANNEL_NAME -f ./channel-artifacts/channel.tx (asi se podria lanzar, pero ojo, al haberlo echo todo con seguridad tls, hay qye ponerlo por lo que quedaria:!!)
+# peer channel create -o orderer.acme.com:7050 -c SCHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem 
+# Fatal error when initializing core config : Could not find config file. Please make sure that FABRIC_CFG_PATH is set to a path which contains core.yaml
 #
 OrdererOrgs:
   - Name: Orderer
