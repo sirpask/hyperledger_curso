@@ -16,14 +16,14 @@
 # 5 añadimos "configtx.yaml" de https://github.com/blockchainempresarial/curso-hyperledger-fabric/blob/master/acme-network/configtx.yaml
 # archivo super importante con secciones para configurar:
 # *- seccion de organizaciones:
-# A- como correra de inicio la organizacion por la red, proveedor de servicios de membresia MSP, directorio de donde se creo. 
+# A- como correra de inicio la organizacion por la red, proveedor de servicios de membresia MSP, directorio de donde se creo.
 #     para que funcione todo esto tiene que estar generado lo de cryptogen.
 #     Le damos a admin todos los permisos
 #     EL endpoint es el servicio que vamos a levantar y su puerto
 #
 # B- configuracin de cada organizacion:
 #     se definen permisos
-# C- el anchorPeers es el peer de contacto con el resto de organizaciones, 1 por organizacion.    
+# C- el anchorPeers es el peer de contacto con el resto de organizaciones, 1 por organizacion.
 # *-seccion de Capabilities:
 #  capas de una red de fabric, se define la version de hyperledger fabric para cada una de las capas, canal, ordenacion y aplicacion
 # *-Seccion de Aplicaciones:
@@ -40,7 +40,7 @@
 #            AbsoluteMaxBytes: 99 MB
 #            PreferredMaxBytes: 512 KB
 #*- seccion de canales
-#      Politicas. (permisos)      
+#      Politicas. (permisos)
 #- seccion de profile (perfiles)
 #      Politicas. (permisos)
 #-       ThreeOrgsOrdererGenesis:   <<< el nombre que quieras, que vas a hacer desde el principio y el bloque genses es una configuracion
@@ -68,11 +68,11 @@
 #                    - *Org3
 #                Capabilities:
 #                    <<: *ApplicationCapabilities
-#    
+#
 #vamos al configtx.yaml y vemos el profile, ahora crearemos sus definiciones la del ThreeOrgsChannel y la del ThreeOrgsOrdererGenesis
 #6.- una vez configurado todo, lanzamos el comando: sirpask@ali12:~/Escritorio/hyperledger_curso/acme-network$ configtxgen -profile ThreeOrgsOrdererGenesis -channelID system-channel -outputBlock ./channel-artifacts/genesis.block
 #7.- ahora creamos la transaccion del canal: configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID marketplace  ((el nombre del canal "marketplace" me lo invento, el que quiera))
-#8.- hay que generar ahora los 3 PanchorsPeers: 
+#8.- hay que generar ahora los 3 PanchorsPeers:
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID marketplace -asOrg Org1MSP
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID marketplace -asOrg Org2MSP
 #configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org3MSPanchors.tx -channelID marketplace -asOrg Org3MSP
@@ -95,7 +95,7 @@
 #Cada organizacion tendria su material criptografico oculto del resto de organizaciones, en este ejemplo al estar montado todo en una maquina esta todo en la misma carpeta.
 #Una cadena blockchain a parte de peers, neceista tambien nodos de ordenacion (y se configura este servicio de ordenamiento tambien en el docker-compose-base.yaml), y hay que configurarlo
 #
-#Video 4 (resumen de todo lo anterior) > 12.- docker-compose-cli-couchdb.yaml >> para crear la red compose. Pones el orden para levantar los servicios en la red: orderer.acme.com:> peer0.org1.acme.com: > peer0.org2.acme.com: > peer0.org3.acme.com: > certificados > couchdb: (base de datos nosql de Apache), cada peer un couchdb 
+#Video 4 (resumen de todo lo anterior) > 12.- docker-compose-cli-couchdb.yaml >> para crear la red compose. Pones el orden para levantar los servicios en la red: orderer.acme.com:> peer0.org1.acme.com: > peer0.org2.acme.com: > peer0.org3.acme.com: > certificados > couchdb: (base de datos nosql de Apache), cada peer un couchdb
 #Al final, Hyperledger fabric son 4 archivos de configuracion para poder desplegar la red.
 # el primero es configtx.yaml
 #a)el peer-base: definicion del comportamiento y las configuraciones de un peer como tal.
@@ -144,7 +144,7 @@
 #Creating peer0.org3.acme.com ... done
 #Creating peer0.org1.acme.com ... done
 #Creating peer0.org2.acme.com ... done
-#Creating cli                 ... done 
+#Creating cli                 ... done
 #--> esta mal, faltaria el ordereer.acme.com// el couchdb1 y el ca.org1.acme.com  y el peer0.org1.acme.com esta duplicado.
 # Y para ver que todo a arrancado bien: docker ps y vemos que aunque en el otro lado pone que flatan cosas, aqui está bien levantado.
 #
@@ -165,12 +165,12 @@
 # Vemos donde estamos:
 #bash-5.0# pwd
 #/opt/gopath/src/github.com/hyperledger/fabric/peer
-#bash-5.0# 
+#bash-5.0#
 # _> ahora falta crear un canal. Creamos anteriormente una transaccion y una configuracion de como queremos ese canal, pero usamos la consola de cli para arrancar el canar con la configuracion anteriormente creada en
 # la carpeta chanel-artifacts
 # volvemos a poner el nombre del canar en una variable global: export CHANNEL_NAME=marketplace  (esto igual no habria que volverlo hacer, pero no cuesta nada)
 #ahora lanzamos el comando: peer channel create -o orderer.acme.com:7050 -c SCHANNEL_NAME -f ./channel-artifacts/channel.tx (asi se podria lanzar, pero ojo, al haberlo echo todo con seguridad tls, hay qye ponerlo por lo que quedaria:!!)
-# peer channel create -o orderer.acme.com:7050 -c SCHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem 
+# peer channel create -o orderer.acme.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
 # Fatal error when initializing core config : Could not find config file. Please make sure that FABRIC_CFG_PATH is set to a path which contains core.yaml
 #
 OrdererOrgs:
@@ -202,7 +202,7 @@ PeerOrgs:
       Count: 1
   - Name: Org3
     Domain: org3.acme.com
-    EnableNodeOUs: true    
+    EnableNodeOUs: true
     Template:
       Count: 1
       SANS:

@@ -1,0 +1,19 @@
+git clone git@github.com:sirpask/hyperledger_curso.git
+
+cd acme-network
+
+docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+
+export CHANNEL_NAME=marketplace
+
+export VERBOSE=false
+
+export FABRIC_CFG_PATH=$PWD
+
+CHANNEL_NAME=$CHANNEL_NAME docker-compose -f docker-compose-cli-couchdb.yaml up -d
+
+abrir: http://localhost:9000  y en containers > cli > 
+
+export CHANNEL_NAME=marketplace
+
+peer channel create -o orderer.acme.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
