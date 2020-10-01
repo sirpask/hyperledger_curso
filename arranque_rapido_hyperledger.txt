@@ -1,5 +1,10 @@
 git clone git@github.com:sirpask/hyperledger_curso.git
 
+para hacer subidas en git:
+    git add *
+    git commit -m 'otra subidita'
+    git push
+
 cd acme-network
 
 sudo chmod 777 /var/run/docker.sock

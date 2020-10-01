@@ -189,8 +189,8 @@
 #--------------->
 # VIdeo 5: con el pontainer activado:
 #
-#creamos en la carpeta de raid chaincode la carpeta foodcontrol.
-#
+#creamos en la carpeta de raid chaincode la carpeta foodcontrol y el archivo foodcontrol.go
+#añadimos paquetes: go get github.com/hyperledger/fabric-contract-api-go/contractapi > link por aqui para repasarlo: https://github.com/SAPDocuments/Tutorials/issues/4415#issuecomment-570162320
 #
 #
 OrdererOrgs:
