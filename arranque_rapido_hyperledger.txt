@@ -9,7 +9,7 @@ cd acme-network
 
 sudo chmod 777 /var/run/docker.sock
 
-sudo docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 
 export CHANNEL_NAME=marketplace
 
@@ -17,9 +17,9 @@ export VERBOSE=false
 
 export FABRIC_CFG_PATH=$PWD
 
-sudo CHANNEL_NAME=$CHANNEL_NAME docker-compose -f docker-compose-cli-couchdb.yaml up -d
+CHANNEL_NAME=$CHANNEL_NAME docker-compose -f docker-compose-cli-couchdb.yaml up -d
 
-abrir: http://localhost:9000  y en containers > cli > 
+abrir: http://localhost:9000  y en containers > cli >  (creo que todo esto da error por que ya esta funcionando)
 
 export CHANNEL_NAME=marketplace
 
