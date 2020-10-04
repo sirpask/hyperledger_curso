@@ -30,6 +30,16 @@ func (s *SmartContract) Set(ctx contractapi.TransactionContextInterface, foodId 
 	//Validaciones de sintaxis
 
 	//validaciones de negocio (estructura de go, esta estructura de binario hay que pasarla a json, y se guarde como conjunto de bytes, se hace con marshal)
+	/*
+		Podriamos preguntar si la transaccion existe, para eso:
+
+		food, err := s.Query(ctx, foodId)
+		if food != nil {
+			fmt.Printfl("foodId already exist error: %s", err.Error())
+			return err
+		}
+
+	*/
 
 	food := Food{
 		Farmer:  farmer,
@@ -45,11 +55,12 @@ func (s *SmartContract) Set(ctx contractapi.TransactionContextInterface, foodId 
 
 	//getstub.putstate para permitir guardar en el leger (libro distribuido) como tal necesita un id y un valor) Putstate estampa de tiempo es el historial de tu activo,
 	//la estapa del tiempo es algo muy elemntal hace que guarde un estado en el libro distribuido, esta en cualquier blockchain
-	//
+	// Esta funcion sirve tanto para guardar como para actualizar
 	return ctx.GetStub().PutState(foodId, foodAsBytes)
 }
 
 //consultar en el ledger una transaccion. *Food hace referencia a la estructura , consultaremos el estado de una transaccion
+
 func (s *SmartContract) Query(ctx contractapi.TransactionContextInterface, foodId string) (*Food, error) {
 
 	foodAsBytes, err := ctx.GetStub().GetState(foodId)
@@ -64,6 +75,7 @@ func (s *SmartContract) Query(ctx contractapi.TransactionContextInterface, foodI
 
 	food := new(Food)
 
+	//el unmarsall sirve para transormas de bytes a formato go
 	err = json.Unmarshal(foodAsBytes, food)
 	if err != nil {
 		return nil, fmt.Errorf("Unmarshal error. %s", err.Error())

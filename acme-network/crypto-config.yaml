@@ -191,6 +191,7 @@
 #
 #creamos en la carpeta de raid chaincode la carpeta foodcontrol y el archivo foodcontrol.go
 #añadimos paquetes: go get github.com/hyperledger/fabric-contract-api-go/contractapi > link por aqui para repasarlo: https://github.com/SAPDocuments/Tutorials/issues/4415#issuecomment-570162320
+#despues de crear el contrato inteligente, hay que desplegarlo, antes metemos las librerias de go.sum y go.mod dentro de la carpeta de chaincode/foodcontrol
 #
 #
 OrdererOrgs:
