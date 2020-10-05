@@ -227,9 +227,18 @@
 # para ver que se han creado las transacciones ¿¿¿ los comandos de chequear no los vemos
 #
 # Ahora queda, probarlo como tal:
-# se llama al metodo set del programa foodcontrol.go
+# se llama al metodo set (tanto para grabar como para actualizar) del programa foodcontrol.go
 # peer chaincode invoke -o orderer.acme.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Set", "did:3","ricardo","banana"]}'
 # y... 020-10-05 14:11:49.359 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 045 Chaincode invoke successful. result: status:200
+#para actualizar es el mismo comando: peer chaincode invoke -o orderer.acme.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Set", "did:3","pask","banana"]}'
+#es el mismo registro que se modifica, pero se crea un registro de estado donde se refleja el cambio.
+#Para consultar ese estado, no se.
+# para consultar el registro: 
+# peer chaincode query -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Query", "did:3"]}'
+# Para completar quiero ver si se puede hacer lo mismo desde la organizacion 2, para ver que no se puede. 
+# a nombre de la tercera organizacion si que va a poder.
+#CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/users/Admin@org3.acme.com/msp CORE_PEER_ADDRESS=peer0.org3.acme.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/peers/peer0.org3.acme.com/tls/ca.crt peer chaincode invoke -o orderer.acme.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Set", "did:4","miguel","platano"]}'
+# Como coño se pueden ver los estados????
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
