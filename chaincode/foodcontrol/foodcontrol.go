@@ -60,7 +60,6 @@ func (s *SmartContract) Set(ctx contractapi.TransactionContextInterface, foodId 
 }
 
 //consultar en el ledger una transaccion. *Food hace referencia a la estructura , consultaremos el estado de una transaccion
-
 func (s *SmartContract) Query(ctx contractapi.TransactionContextInterface, foodId string) (*Food, error) {
 
 	foodAsBytes, err := ctx.GetStub().GetState(foodId)

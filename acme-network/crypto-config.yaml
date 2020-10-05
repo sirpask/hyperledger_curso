@@ -192,8 +192,44 @@
 #creamos en la carpeta de raid chaincode la carpeta foodcontrol y el archivo foodcontrol.go
 #añadimos paquetes: go get github.com/hyperledger/fabric-contract-api-go/contractapi > link por aqui para repasarlo: https://github.com/SAPDocuments/Tutorials/issues/4415#issuecomment-570162320
 #despues de crear el contrato inteligente, hay que desplegarlo, antes metemos las librerias de go.sum y go.mod dentro de la carpeta de chaincode/foodcontrol
+#1.- creamos una variable para el nombre del canal: export CHANNEL_NAME=marketplace
+#2.- creamos otra variable para el chain code: export CHAINCODE_NAME=foodcontrol
+#3.- otra que defina la version de ejecucion: export CHAINCODE_VERSION=1
+#4.- otra que defina el tipo de lenguaje del contrato inteligente: export CC_RUNTIME_LANGUAGE=golang
+#5.- otra que defina el path de ejecucion: export CC_SRC_PATH=../../../chaincode/$CHAINCODE_NAME
+#6 - otra variable que muestre donde este el certificado de la CA del ordenamiento, es decir:
+#  cat /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
+# export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
+# Ahora crearemos un fichero tar.gz para instalarlo en todos los peers para ello escribimos un comando:
+# peer lifecycle chaincode package ${CHAINCODE_NAME}.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label ${CHAINCODE_NAME}_${CHAINCODE_VERSION} >&log.txt 
+# NO me funciono a la primera, tube que poner todas las variables a mano, y entonces fue bien:
+#  peer lifecycle chaincode package foodcontrol.tar.gz --path /opt/gopath/src/github.com/chaincode/foodcontrol --lang golang --label foodcontrol_1 >&log.txt
+# Y entonces se creo el fichero foodcontrol.tar.gz
+# ese empaquietado es lo que enviare a cada peer, esta isntalacion se hace igual en cada una de las organizaciones
+#¿como se instala? pues asi: por defecto, en la consola cli de portainer siempre estamos trabajando sobre la primera organizacion, por eso siempre lo que hagamos se hace alli primero
+# comando para instalar en el 1: 
+#peer lifecycle chaincode install foodcontrol.tar.gz
+# pasa ber que en todas se instala el mismo paquete, nos quedamos con el id que se crea: 2020-10-05 13:10:23.316 UTC [cli.lifecycle.chaincode] submitInstallProposal -> INFO 036 Chaincode code package identifier: foodcontrol_1:27b8ec400fdac91ab3996470a3b4fa6646df4fe49beb99ac9fca6729950d6eb9
+#comando para el 2: declarar variables: (igual que las de arriba)
+# CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.acme.com/users/Admin@org2.acme.com/msp CORE_PEER_ADDRESS=peer0.org2.acme.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.acme.com/peers/peer0.org2.acme.com/tls/ca.crt peer lifecycle chaincode install foodcontrol.tar.gz
+# CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/users/Admin@org3.acme.com/msp CORE_PEER_ADDRESS=peer0.org3.acme.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/peers/peer0.org3.acme.com/tls/ca.crt peer lifecycle chaincode install foodcontrol.tar.gz
+# ojo, ahora eta instalado, pero no quiere decir que este disponible. no hay aun ningun contenedor nuevo, habra que crearlo:
+# ahora hay que definir las politicas de aprobacion que se han definido poara el chaincode (ojo solo la priemra y la tercera organizacion tienen permisos de escritura, solo ellas pueden firmar y proponer transacciones nuevas en esa chaincode, por eso estas politicas son especificas para cada chaincode en cada canal, cada uno es una base de datos unaica.)
+# se hace ejecuntando: peer lifecycle chaincode approveformyorg --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --waitForEvent --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --package-id foodcontrol_1:27b8ec400fdac91ab3996470a3b4fa6646df4fe49beb99ac9fca6729950d6eb9
+# se me han aprobado las politicas, se verifican: (( peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --output json )) por aahora solo esta aprobada la primera organizacion, faltaria la tercera, que se hace con este comando:
+#CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/users/Admin@org3.acme.com/msp CORE_PEER_ADDRESS=peer0.org3.acme.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/peers/peer0.org3.acme.com/tls/ca.crt peer lifecycle chaincode approveformyorg --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --waitForEvent --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --package-id foodcontrol_1:27b8ec400fdac91ab3996470a3b4fa6646df4fe49beb99ac9fca6729950d6eb9
+# Aun hace falta hacer un commit de nuestro commit en la redy falta algo elemental, poner en marcha el chaincode.
+# Eso se hace: peer lifecycle chaincode commit -o orderer.acme.com:7050 --tls --cafile $ORDERER_CA --peerAddresses peer0.org1.acme.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.acme.com/peers/peer0.org1.acme.com/tls/ca.crt --peerAddresses peer0.org3.acme.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.acme.com/peers/peer0.org3.acme.com/tls/ca.crt --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')"
+# Se crean dos contenedores en el portainer.io donde se ven los peers 1 y 3
+# tambien entramos en la base de datos http://localhost:5985/_utils/#
+#      - COUCHDB_USER=admin
+#      - COUCHDB_PASSWORD=adminpw
+# para ver que se han creado las transacciones ¿¿¿ los comandos de chequear no los vemos
 #
-#
+# Ahora queda, probarlo como tal:
+# se llama al metodo set del programa foodcontrol.go
+# peer chaincode invoke -o orderer.acme.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Set", "did:3","ricardo","banana"]}'
+# y... 020-10-05 14:11:49.359 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 045 Chaincode invoke successful. result: status:200
 OrdererOrgs:
   - Name: Orderer
     Domain: acme.com
