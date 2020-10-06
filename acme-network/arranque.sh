@@ -18,5 +18,3 @@ export FABRIC_CFG_PATH=$PWD
 echo arrancamos el canal en el couchdb
 CHANNEL_NAME=$CHANNEL_NAME docker-compose -f docker-compose-cli-couchdb.yaml up -d
 
-echo abrimos el couchdb
-firefox http://localhost:9000
