@@ -252,6 +252,12 @@
 # c.- Get (query) a wallet (consultar)
 # d.- inicializar la funcion
 # e.- Invoke funcion (para llamar a la funcion a, b o c)
+# la clase wallet debe tener una wallet id y un token amount, para controlar el id y la cantidad.
+#
+# Este proyecto se debe hacer en java, y normal mete con eclipse para que te genere el proyuecto de tipo Gradle, pero yo voy ha comier todo del repositorio Github y lo meto directamente al visual estudio code para verlo desde ahi.
+# Gradle alternativa a maven, tiene mejor manejo de dependencias (la cascara de proyecto te la genera ya eclipse, visual studio no)
+#
+#
 #
 OrdererOrgs:
   - Name: Orderer

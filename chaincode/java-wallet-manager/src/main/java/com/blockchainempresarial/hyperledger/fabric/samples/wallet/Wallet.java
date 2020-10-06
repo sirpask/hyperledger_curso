@@ -4,6 +4,8 @@
 	email: ricardo@blockchainempresarial.com
 */
 
+/* */
+
 package com.blockchainempresarial.hyperledger.fabric.samples.wallet;
 
 import java.util.Objects;
@@ -13,6 +15,8 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 import com.owlike.genson.annotation.JsonProperty;
 
+
+// tipos de datos especificos para hyperledger @datatype y @property
 @DataType()
 public final class Wallet {
 
@@ -30,11 +34,14 @@ public final class Wallet {
 		return owner;
 	}
 
+	//creamos este constructor para inicializar variables, añadimos jsonproperty para definir el nombre de la propiedad 
 	public Wallet(@JsonProperty("tokenAmount") final Double tokenAmount, @JsonProperty("owner") final String owner) {
 		this.tokenAmount = tokenAmount;
 		this.owner = owner;
 	}
 
+
+	//verificamos que el objeto esta bien
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
